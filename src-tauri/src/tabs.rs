@@ -4,7 +4,7 @@ use nanoid::nanoid;
 use tauri::{
   menu::{MenuId, MenuItem},
   webview::PageLoadPayload,
-  AppHandle, LogicalPosition, LogicalSize, Manager, Webview, WebviewBuilder, WebviewUrl, Window,
+  AppHandle, Manager, PhysicalPosition, PhysicalSize, Webview, WebviewBuilder, WebviewUrl, Window,
 };
 
 use crate::state::BrowserState;
@@ -16,11 +16,8 @@ pub fn open_new_tab(
   current_webview: &str,
 ) -> Result<(MenuId, String), Box<dyn std::error::Error>> {
   let webview_id = nanoid!();
-  window.add_child(
-    WebviewBuilder::new(&webview_id, WebviewUrl::App(Default::default())),
-    LogicalPosition::new(0., 0.),
-    LogicalSize::new(600., 600.),
-  )?;
+  let size = window.inner_size()?;
+  new_tab(window, size, &webview_id)?;
 
   switch_tab(window, current_webview, &webview_id)?;
 
@@ -90,4 +87,12 @@ pub fn on_page_load(webview: &Webview, payload: &PageLoadPayload) {
   if let Err(e) = rename_selected_tab(&window, tabs_menu_id, tab_id, new_name) {
     eprintln!("Failed renaming selected tab {tab_id:?} to a new name: {e}");
   }
+}
+
+pub fn new_tab(window: &Window, size: PhysicalSize<u32>, label: &str) -> tauri::Result<Webview> {
+  window.add_child(
+    WebviewBuilder::new(label, WebviewUrl::App(Default::default())).auto_resize(),
+    PhysicalPosition::new(0, 70),
+    PhysicalSize::new(size.width, size.height - 70),
+  )
 }
