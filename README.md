@@ -61,7 +61,7 @@ Fill and create the `latest.json` file on the update server:
   "version": "VERSION",
   "platforms": {
     "linux-x86_64": {
-      "signature": "https:// YOUR UPDATE SERVER DOMAIN /appimage/demo-tauri-browser_VERSION_amd64.AppImage.sig",
+      "signature": "CONTENTS OF THE demo-tauri-browser_VERSION_amd64.AppImage.sig FILE",
       "url": "https:// YOUR UPDATE SERVER DOMAIN /appimage/demo-tauri-browser_VERSION_amd64.AppImage"
     },
     "windows-x86_64": {
